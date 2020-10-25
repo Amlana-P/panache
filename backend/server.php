@@ -56,7 +56,7 @@ if(isset($_POST['user_reg'])){
     mysqli_query($con, $query);
 
     if(mysqli_query($con, $query)){
-        $redirectUrl = '../index.html';
+        $redirectUrl = './register-login.php';
     
         echo '<script type="application/javascript">alert("Successfully Registered"); window.location.href = "'.$redirectUrl.'";</script>';
     }else{
@@ -72,7 +72,7 @@ if(isset($_POST['user_login'])){
     $email = mysqli_real_escape_string($con, $_POST['email']);
     $password = mysqli_real_escape_string($con, $_POST['password']);
     if(empty($email)){
-        array_push($errors, 'Username field is blank!');
+        array_push($errors, 'Email field is blank!');
     }
     else if(empty($password)){
         array_push($errors, 'Password field is blank!');
@@ -84,7 +84,10 @@ if(isset($_POST['user_login'])){
         $results = mysqli_query($con, $query);
 
         if (mysqli_num_rows($results) == 1) {
-            $_SESSION['username'] = $username;
+            $username_query = "SELECT username FROM USERS WHERE email = '$email' AND password = '$password'";
+            $name_results = mysqli_query($con, $username_query);
+            $row = mysqli_fetch_array($name_results);
+            $_SESSION['username'] = $row['username'];
             $_SESSION['success'] = $username . ", You are now logged in";
             header('location: dashboard.php');
         }else {
