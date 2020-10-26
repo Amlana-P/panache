@@ -1,4 +1,4 @@
-<?php session_start(); 
+<?php  session_start(); 
 
 	if (!isset($_SESSION['username'])) {
 		$_SESSION['msg'] = "You must log in first";
@@ -8,8 +8,8 @@
 	if (isset($_GET['logout'])) {
 		session_destroy();
 		unset($_SESSION['username']);
-		header("location: login.php");
-	}
+      header("location: register-login.php");
+   }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +17,13 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+   
+
+   <!-- jQuery library -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+   <!-- Latest compiled JavaScript -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<title>P A N A C H E Dashboard</title>
 	  <link rel="icon" href="../logo.png" type="image/gif" sizes="100x100">
 	<style>
@@ -54,7 +61,6 @@ a {
 .s-layout__content {
    display: flex;
    justify-content: center;
-   align-items: center;
    flex: 1;
 }
 
@@ -188,6 +194,44 @@ a {
    }
 }
 
+#registration_table {
+   display: none;
+}
+
+.content-table {
+   border-collapse: collapse;
+   margin: 25px 0;
+   font-size: 0.9em;
+   min-width: 400px;
+   border-radius: 5px 5px 0 0;
+   overflow: hidden;
+   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.content-table thead tr {
+   background-color: #009879;
+   color:#ffffff;
+   text-align:left;
+   font-weight: bold;
+}
+
+.content-table th,
+.content-table td {
+   padding: 12px 15px;
+} 
+
+.content-table tbody tr {
+   border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+   background-color: #f3f3f3;
+}
+
+.content-table tbody tr:last-of-type {
+   border-bottom: 2px solid #009879;
+}
+
 	</style>
 </head>
 <body>
@@ -207,15 +251,23 @@ a {
 			<?php endif ?>
 		</li>
         <li>
-           <a class="s-sidebar__nav-link" href="#0">
+           <a class="s-sidebar__nav-link" name="home">
               <i class="fa fa-home"></i><em>Home</em>
            </a>
         </li>
+        <?php if($_SESSION['role'] == 1){ ;?>
+        <li>
+           <a class="s-sidebar__nav-link" name="registration">
+             <i class="fa fa-user"></i><em>Registrations</em>
+           </a>
+        </li>
+        <?php } else{ ;?>
         <li>
            <a class="s-sidebar__nav-link" href="#0">
              <i class="fa fa-user"></i><em>My Profile</em>
            </a>
         </li>
+        <?php } ;?>
         <li>
            <a class="s-sidebar__nav-link" href="register-login.php?logout='1'">
               <i class="fa fa-sign-out"></i><em>Logout</em>
@@ -227,8 +279,32 @@ a {
 
 <!-- Content -->
 <main class="s-layout__content">
-  <h1>Full View, Please!</h1>
+  <div id="registration_table">
+     
+  </div>
 </main>
 </div>
+<script>
+   
+$(document).ready(function() {
+   $('a[name="registration"]').click(function(event) {
+      $("#registration_table").css("display", "block");
+
+      $.ajax({
+         url:'fetchData.php',
+         type: 'get',
+
+         success: function(responseData) {
+            $('#registration_table').html(responseData);
+         }
+      });
+
+   })
+
+   $('a[name="home"]').click(function(event) {
+      $("#registration_table").css("display", "none");
+   })
+});
+</script>
 </body>
 </html>

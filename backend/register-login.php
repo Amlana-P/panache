@@ -1,10 +1,14 @@
-<?php include('server.php') ;?>
+<?php if(!isset($_SESSION)) 
+{ 
+    session_start(); 
+} ;?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register/Login</title>
+    <title>P A N A C H E Registration/Login Portal</title>
+	  <link rel="icon" href="../logo.png" type="image/gif" sizes="100x100">
     <style>
         * {
   margin: 0;
@@ -213,7 +217,7 @@ a {
 <label for="reg-btn" class="reg-btn-label"><span>Registration</span></label>
 <div class="reg-container" id="nav-cont">
   <div class="input-box-cont">
-    <h1 class="heading1">IS App registration</h1>
+    <h1 class="heading1">Panache Registration</h1>
     <form action="register-login.php" class="form-cont" method="post">
       <input type="name" class="input-box" required autocomplete="off" name="username" placeholder="Name" id="name">
       <input type="college" class="input-box" required autocomplete="off" name="college" placeholder="College" id="college">
@@ -227,8 +231,9 @@ a {
 </div>
 <div class="main-container" id="main-cont">
   <div class="input-box-cont">
-    <h1 class="heading1">IS App login</h1>
+    <h1 class="heading1">Panache Login</h1>
     <form action="register-login.php" class="form-cont" method="post">
+      <?php include('errors.php') ;?>
       <input type="email" class="input-box" required autocomplete="off" name="email" placeholder="Email">
       <input type="password" class="input-box" required autocomplete="off" name="password" placeholder="Password">
       <input type="submit" value="Login" class="submit-btn" name="user_login">

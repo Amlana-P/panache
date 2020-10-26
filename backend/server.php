@@ -1,11 +1,6 @@
 <?php 
+
 include('database.php');
-
-
-if(!isset($_SESSION)) 
-    { 
-        session_start(); 
-    } 
 
 $username = "";
 $college = "";
@@ -15,33 +10,6 @@ $password = "";
 $errors = array();
 $_SESSION['success'] = "";
 
-
-// Admin Login
-
-if(isset($_POST['login_user'])){
-    $username = mysqli_real_escape_string($con, $_POST['username']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
-    if(empty($username)){
-        array_push($errors, 'Username field is blank!');
-    }
-    else if(empty($password)){
-        array_push($errors, 'Password field is blank!');
-    }
-
-    if(count($errors) == 0){
-        $password = md5($password);
-        $query = "SELECT * FROM USERS WHERE username = '$username' AND password = '$password'";
-        $results = mysqli_query($con, $query);
-
-        if (mysqli_num_rows($results) == 1) {
-            $_SESSION['username'] = $username;
-            $_SESSION['success'] = $username . ", You are now logged in";
-            header('location: adminpanel.php');
-        }else {
-            array_push($errors, "Invalid Credentials");
-        }
-    }
-}
 
 // User Registration
 if(isset($_POST['user_reg'])){
@@ -53,20 +21,21 @@ if(isset($_POST['user_reg'])){
 
     $password = md5($password);
     $query = "INSERT INTO users (username, college, contact, email, password) VALUES('$username', '$college', '$contact', '$email', '$password')";
-    mysqli_query($con, $query);
+    $query_result = mysqli_query($con, $query) or die(mysqli_error());
 
-    if(mysqli_query($con, $query)){
-        $redirectUrl = './register-login.php';
+    if($query_result){
+        $_SESSION['username'] = $username;
+        $redirectUrl = './dashboard.php';
     
-        echo '<script type="application/javascript">alert("Successfully Registered"); window.location.href = "'.$redirectUrl.'";</script>';
+        echo '<script type="application/javascript">alert("Successfully Registered."); window.location.href = "'.$redirectUrl.'";</script>';
     }else{
-        echo "Error!". mysql_error();
-        echo '<script type="application/javascript">alert("Error! '.mysql_error().'");</script>';
+        echo "Error!". mysqli_error();
+        echo '<script type="application/javascript">alert("Error! '.mysqli_error().'");</script>';
     }
 
 }
 
-// User Login
+// Admin | User Login
 
 if(isset($_POST['user_login'])){
     $email = mysqli_real_escape_string($con, $_POST['email']);
@@ -81,19 +50,32 @@ if(isset($_POST['user_login'])){
     if(count($errors) == 0){
         $password = md5($password);
         $query = "SELECT * FROM USERS WHERE email = '$email' AND password = '$password'";
-        $results = mysqli_query($con, $query);
+        $results = mysqli_query($con, $query) or die (mysqli_error($con));
 
         if (mysqli_num_rows($results) == 1) {
+
+            $redirectUrl = './dashboard.php';
+            echo '<script type="application/javascript">alert("You are now logged in."); window.location.href = "'.$redirectUrl.'";</script>';
+
             $username_query = "SELECT username FROM USERS WHERE email = '$email' AND password = '$password'";
             $name_results = mysqli_query($con, $username_query);
-            $row = mysqli_fetch_array($name_results);
-            $_SESSION['username'] = $row['username'];
+            $name = mysqli_fetch_array($name_results);
+            $_SESSION['username'] = $name['username'];
+
+            $role_query = "SELECT role FROM USERS WHERE email = '$email' AND password = '$password'";
+            $role_results = mysqli_query($con, $role_query);
+            $role = mysqli_fetch_array($role_results);
+            $_SESSION['role'] = $role['role'];
+
             $_SESSION['success'] = $username . ", You are now logged in";
-            header('location: dashboard.php');
+    
         }else {
             array_push($errors, "Invalid Credentials");
+            echo "Error!". mysqli_error($con);
+            echo '<script type="application/javascript">alert("Error! '.mysqli_error($con).'");</script>';
         }
     }
+
 }
 
 ?>
