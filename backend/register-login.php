@@ -145,6 +145,7 @@ a {
   background-color: var(--active-bg-color);
 }
 .form-cont input[type = "name"],
+.form-cont input[type = "insta_id"],
 .form-cont input[type = "college"],
 .form-cont input[type = "contact"],
 .form-cont input[type = "email"],
@@ -159,6 +160,7 @@ a {
 }
 
 .form-cont input[type = "name"]:hover::-webkit-input-placeholder,
+.form-cont input[type = "insta_id"]:hover::-webkit-input-placeholder,
 .form-cont input[type = "college"]:hover::-webkit-input-placeholder,
 .form-cont input[type = "contact"]:hover::-webkit-input-placeholder,
 .form-cont input[type = "email"]:hover::-webkit-input-placeholder,
@@ -220,6 +222,7 @@ a {
     <h1 class="heading1">Panache Registration</h1>
     <form action="register-login.php" class="form-cont" method="post">
       <input type="name" class="input-box" required autocomplete="off" name="username" placeholder="Name" id="name">
+      <input type="insta_id" class="input-box" required autocomplete="off" name="insta_id" placeholder="Instagram ID" id="insta_id">
       <input type="college" class="input-box" required autocomplete="off" name="college" placeholder="College" id="college">
       <input type="contact" class="input-box" required autocomplete="off" name="contact" placeholder="Contact" id="contact">
       <input type="email" class="input-box" required autocomplete="off" name="email" placeholder="Email" id="email">

@@ -17,6 +17,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+   <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
    
 
    <!-- jQuery library -->
@@ -194,7 +197,7 @@ a {
    }
 }
 
-#registration_table {
+#registration_table, #user_profile {
    display: none;
 }
 
@@ -232,6 +235,61 @@ a {
    border-bottom: 2px solid #009879;
 }
 
+.member-box {
+    position: relative;
+    max-width: 300px;
+    margin: 100px auto;
+    font-family: 'Raleway', sans-serif;
+}
+.member-box .shape {
+    width: 200px;
+    height: 200px;
+    background: var(--primary);
+    opacity: 0.2;
+    position: absolute;
+    top: 0;
+    right: -100px;
+    transform: rotate(45deg);
+}
+
+.member-box .card-img-top {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 20px auto;
+    text-align: center;
+    box-shadow: 0px 0px 0px 8px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+}
+
+.member-box:hover .card-img-top {
+    box-shadow: 0px 0px 0px 12px rgba(0, 0, 0, 0.1)
+}
+
+.member-box .member-degignation {
+    color: var(--green);
+}
+
+.member-box .member-title {
+    
+}
+
+.member-box small {
+    font-size: 12px;
+}
+
+.member-box .social a {
+    font-size: 15px;
+    color: var(--green);
+    padding: 10px;
+}
+
+.member-box .card-footer {
+    background-color: transparent;
+    border: 0;
+}
+
 	</style>
 </head>
 <body>
@@ -263,7 +321,7 @@ a {
         </li>
         <?php } else{ ;?>
         <li>
-           <a class="s-sidebar__nav-link" href="#0">
+           <a class="s-sidebar__nav-link" name="myprofile">
              <i class="fa fa-user"></i><em>My Profile</em>
            </a>
         </li>
@@ -282,6 +340,9 @@ a {
   <div id="registration_table">
      
   </div>
+  <div id="user_profile">
+      
+  </div>
 </main>
 </div>
 <script>
@@ -291,11 +352,11 @@ $(document).ready(function() {
       $("#registration_table").css("display", "block");
 
       $.ajax({
-         url:'fetchData.php',
+         url:'fetchR_Data.php',
          type: 'get',
 
-         success: function(responseData) {
-            $('#registration_table').html(responseData);
+         success: function(registrationData) {
+            $('#registration_table').html(registrationData);
          }
       });
 
@@ -303,6 +364,22 @@ $(document).ready(function() {
 
    $('a[name="home"]').click(function(event) {
       $("#registration_table").css("display", "none");
+      $("#user_profile").css("display", "none");
+   })
+
+   $('a[name="myprofile"]').click(function(event) {
+      $("#registration_table").css("display", "none");
+      $("#user_profile").css("display", "block");
+
+      $.ajax({
+         url:'fetchP_Data.php',
+         type: 'get',
+
+         success: function(profileData) {
+            $('#user_profile').html(profileData);
+         }
+      });
+
    })
 });
 </script>

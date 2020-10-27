@@ -3,6 +3,7 @@
 include('database.php');
 
 $username = "";
+$insta_id = "";
 $college = "";
 $contact = "";
 $email = "";
@@ -14,13 +15,14 @@ $_SESSION['success'] = "";
 // User Registration
 if(isset($_POST['user_reg'])){
     $username = mysqli_real_escape_string($con, $_POST['username']);
+    $insta_id = mysqli_real_escape_string($con, $_POST['insta_id']);
     $college = mysqli_real_escape_string($con, $_POST['college']);
     $contact = mysqli_real_escape_string($con, $_POST['contact']);
     $password = mysqli_real_escape_string($con, $_POST['password']);
     $email = mysqli_real_escape_string($con, $_POST['email']);
 
     $password = md5($password);
-    $query = "INSERT INTO users (username, college, contact, email, password) VALUES('$username', '$college', '$contact', '$email', '$password')";
+    $query = "INSERT INTO users (username,insta_id, college, contact, email, password) VALUES('$username', '$insta_id', '$college', '$contact', '$email', '$password')";
     $query_result = mysqli_query($con, $query) or die(mysqli_error());
 
     if($query_result){
@@ -57,18 +59,16 @@ if(isset($_POST['user_login'])){
             $redirectUrl = './dashboard.php';
             echo '<script type="application/javascript">alert("You are now logged in."); window.location.href = "'.$redirectUrl.'";</script>';
 
-            $username_query = "SELECT username FROM USERS WHERE email = '$email' AND password = '$password'";
-            $name_results = mysqli_query($con, $username_query);
-            $name = mysqli_fetch_array($name_results);
-            $_SESSION['username'] = $name['username'];
+            $query = "SELECT username, role, user_id, insta_id FROM USERS WHERE email = '$email' AND password = '$password'";
+            $results_obj = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($results_obj);
 
-            $role_query = "SELECT role FROM USERS WHERE email = '$email' AND password = '$password'";
-            $role_results = mysqli_query($con, $role_query);
-            $role = mysqli_fetch_array($role_results);
-            $_SESSION['role'] = $role['role'];
-
+            $_SESSION['username'] = $result['username'];
+            $_SESSION['role'] = $result['role'];
+            $_SESSION['user_id'] = $result['user_id'];
+            $_SESSION['insta_id'] = $result['insta_id'];
             $_SESSION['success'] = $username . ", You are now logged in";
-    
+            
         }else {
             array_push($errors, "Invalid Credentials");
             echo "Error!". mysqli_error($con);
